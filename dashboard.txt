@@ -1,0 +1,45 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useClipboard } from "@/hooks/useClipboard";
+import { FaWhatsapp } from "react-icons/fa";
+
+export default function Dashboard() {
+  const [user, setUser] = useState({ name: "John Doe", referralCode: "ABC123" });
+  const [goalAchieved, setGoalAchieved] = useState(5000);
+  const donationLink = `https://donate.example.com/${user.referralCode}`;
+  const { copyToClipboard } = useClipboard();
+
+  const handleShareWhatsApp = () => {
+    const message = `Hi, I am raising funds for NayePankh Foundation. Please support me by donating through this link ${donationLink} and make a difference!`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
+  };
+
+  return (
+    <div className="flex h-screen">
+      <aside className="w-64 bg-gray-900 text-white p-4">
+        <h2 className="text-xl font-semibold">Menu</h2>
+        <ul>
+          <li className="mt-2">Dashboard</li>
+          <li className="mt-2">Transactions</li>
+        </ul>
+      </aside>
+      <main className="flex-1 p-8">
+        <h1 className="text-3xl font-bold text-center mb-4">Welcome, {user.name}!</h1>
+        <Card className="p-4 mb-4">
+          <CardContent>
+            <h2 className="text-lg font-semibold">Goal Achieved</h2>
+            <p className="text-2xl font-bold">${goalAchieved}</p>
+          </CardContent>
+        </Card>
+        <div className="flex gap-4">
+          <Button onClick={() => copyToClipboard(donationLink)}>Copy Donation Link</Button>
+          <Button onClick={handleShareWhatsApp} className="flex items-center">
+            <FaWhatsapp className="mr-2" /> Share on WhatsApp
+          </Button>
+        </div>
+        <p className="mt-4">Your Referral Code: <span className="font-bold">{user.referralCode}</span></p>
+      </main>
+    </div>
+  );
+}
